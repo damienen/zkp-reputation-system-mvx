@@ -1,0 +1,12 @@
+{
+  "printWidth": 160,
+  "singleQuote": false,
+  "quoteProps": "preserve",
+  "trailingComma": "es5",
+  "editor.formatOnSave": true,
+  "tabWidth": 2,
+  "bracketSameLine": true,
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "organizeImportsSkipDestructiveCodeActions": true
+}

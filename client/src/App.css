@@ -4,6 +4,17 @@
   font-family: 'DM Sans', sans-serif;
 }
 
-index, body, html {
+index, body, html, root {
   width: 100%;
+  height: 100dvh;
 }
+
+body {
+  @apply font-dmSans;
+}
+
+.dapp-core-component__extensionLoginButton-styles__no-extension-button-title,
+.dapp-core-component__extensionLoginButton-styles__no-extension-button-wrapper {
+  display: none;
+}
+
