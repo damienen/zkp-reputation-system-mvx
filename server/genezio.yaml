@@ -13,3 +13,6 @@ classes:
   - path: ./src/server.ts
     type: jsonrpc
     methods: []
+  - path: ./src/mxApi.ts
+    type: jsonrpc
+    methods: []

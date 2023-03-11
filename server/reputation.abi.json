@@ -1,0 +1,410 @@
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.69.0-nightly",
+            "commitHash": "11d96b59307b1702fffe871bfc2d0145d070881e",
+            "commitDate": "2023-02-01",
+            "channel": "Nightly",
+            "short": "rustc 1.69.0-nightly (11d96b593 2023-02-01)"
+        },
+        "contractCrate": {
+            "name": "reputation",
+            "version": "0.0.0"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.39.5"
+        }
+    },
+    "name": "Reputation",
+    "constructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "name": "createSpace",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "token_identifier",
+                    "type": "TokenIdentifier"
+                },
+                {
+                    "name": "name",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "createCampaign",
+            "mutability": "mutable",
+            "payableInTokens": [
+                "*"
+            ],
+            "inputs": [
+                {
+                    "name": "name",
+                    "type": "bytes"
+                },
+                {
+                    "name": "media",
+                    "type": "bytes"
+                },
+                {
+                    "name": "claim_amount",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "require_whitelist",
+                    "type": "bool"
+                },
+                {
+                    "name": "opt_supply",
+                    "type": "Option<BigUint>"
+                },
+                {
+                    "name": "opt_period",
+                    "type": "optional<multi<u64,u64>>",
+                    "multi_arg": true
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "claim",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "token_identifier",
+                    "type": "TokenIdentifier"
+                },
+                {
+                    "name": "nonce",
+                    "type": "u64"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "whitelistParticipants",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "nonce",
+                    "type": "u64"
+                },
+                {
+                    "name": "addresses",
+                    "type": "variadic<Address>",
+                    "multi_arg": true
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "delistParticipants",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "nonce",
+                    "type": "u64"
+                },
+                {
+                    "name": "addresses",
+                    "type": "variadic<Address>",
+                    "multi_arg": true
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "pauseSpace",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "space_id",
+                    "type": "TokenIdentifier"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "unpauseSpace",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "space_id",
+                    "type": "TokenIdentifier"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "pause",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [],
+            "outputs": []
+        },
+        {
+            "name": "unpause",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [],
+            "outputs": []
+        },
+        {
+            "name": "setAdministrator",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "administrator",
+                    "type": "Address"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getCampaigns",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "space_id",
+                    "type": "TokenIdentifier"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<multi<u64,Campaign>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getCampaignWhiteList",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "space_id",
+                    "type": "TokenIdentifier"
+                },
+                {
+                    "name": "nonce",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<Address>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getState",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "getSpaceState",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "space_id",
+                    "type": "TokenIdentifier"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "getAdministrator",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "Address"
+                }
+            ]
+        },
+        {
+            "name": "getSpaces",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "List<Space>"
+                }
+            ]
+        },
+        {
+            "name": "getSpaceCampaigns",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "space_id",
+                    "type": "TokenIdentifier"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "List<Campaign>"
+                }
+            ]
+        },
+        {
+            "name": "viewSpace",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "SpaceView"
+                }
+            ]
+        },
+        {
+            "name": "viewClaims",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "List<ClaimsView>"
+                }
+            ]
+        },
+        {
+            "name": "viewClaimed",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "token_identifier",
+                    "type": "TokenIdentifier"
+                },
+                {
+                    "name": "nonce",
+                    "type": "u64"
+                },
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "bool"
+                }
+            ]
+        }
+    ],
+    "events": [],
+    "hasCallback": false,
+    "types": {
+        "Campaign": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "space_id",
+                    "type": "TokenIdentifier"
+                },
+                {
+                    "name": "nonce",
+                    "type": "u64"
+                },
+                {
+                    "name": "name",
+                    "type": "bytes"
+                },
+                {
+                    "name": "claim_amount",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "max_supply",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "minted_supply",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "start",
+                    "type": "u64"
+                },
+                {
+                    "name": "end",
+                    "type": "u64"
+                },
+                {
+                    "name": "created_date",
+                    "type": "u64"
+                },
+                {
+                    "name": "require_whitelist",
+                    "type": "bool"
+                }
+            ]
+        },
+        "ClaimsView": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "campaign",
+                    "type": "Campaign"
+                },
+                {
+                    "name": "amount",
+                    "type": "BigUint"
+                }
+            ]
+        },
+        "Space": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "space_id",
+                    "type": "TokenIdentifier"
+                },
+                {
+                    "name": "name",
+                    "type": "bytes"
+                }
+            ]
+        },
+        "SpaceView": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "space",
+                    "type": "Space"
+                },
+                {
+                    "name": "campaigns",
+                    "type": "List<Campaign>"
+                }
+            ]
+        }
+    }
+}
