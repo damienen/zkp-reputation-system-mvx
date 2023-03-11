@@ -1,4 +1,4 @@
-name: multiverse-ts
+name: durin-reputation
 region: us-east-1
 cloudProvider: aws
 sdk:
