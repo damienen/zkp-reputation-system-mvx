@@ -1,5 +1,5 @@
-name: multiverse-ts
-region: us-east-1
+name: durin-reputation
+region: eu-central-1
 cloudProvider: aws
 sdk:
   language: ts
@@ -8,7 +8,7 @@ sdk:
   path: ../client/src/sdk
 frontend:
   path: ../client/build
-  subdomain: sapphire-marginal-blackbird
+  subdomain: durin-mellon-elrond
 classes:
   - path: ./server.ts
     type: jsonrpc
