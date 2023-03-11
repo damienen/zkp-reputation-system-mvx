@@ -1,0 +1,66 @@
+name: deploy
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '*.md'
+      - 'dependabot.yaml'
+  workflow_dispatch:
+  
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.0.0
+      - uses: Genez-io/genezio-github-action@main
+        with:
+          genezio-version: latest
+          token: $${{ secrets.GENEZIO_TOKEN }}
+      - name: Test genezio installation
+        run: genezio ls
+        
+        # Project can be checked at https://app.genez.io
+      - name: Deploy backend
+        working-directory: ./server
+        run: npm i && genezio deploy
+        
+      - uses: actions/upload-artifact@v3
+        with:
+          name: genezio-generated-sdk
+          path: ./client/src/sdk
+        
+  deploy-frontend:
+    needs: deploy-backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.0.0
+      - uses: Genez-io/genezio-github-action@main
+        with:
+          genezio-version: latest
+          token: ${{ secrets.GENEZIO_TOKEN }}
+      - name: Test genezio installation
+        run: genezio ls
+      
+      - uses: actions/download-artifact@master
+        with:
+          name: genezio-generated-sdk
+          path: ./client/src/sdk
+      - name: Buld the frontend code
+        working-directory: ./client
+        run: npm i && npm run build
+        
+      - name: Deploy frontend
+        working-directory: ./server
+        run: genezio deploy --frontend
+          
+        
+          
+      
+    
