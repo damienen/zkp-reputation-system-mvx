@@ -13,6 +13,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const API_URL = process.env.BLAST_API_URL;
+const test = "blana";
 
 export class Server {
   checkInternalServerHealth() {
