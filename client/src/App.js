@@ -1,14 +1,11 @@
 import { NotificationModal, SignTransactionsModals, TransactionsToastList } from "@multiversx/sdk-dapp/UI";
 import { DappProvider } from "@multiversx/sdk-dapp/wrappers";
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
 import Content from "./components/Content";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-import About from "./pages/About";
-import Home from "./pages/Home";
-import { PageNotFound } from "./pages/PageNotFound";
 
 function App() {
   return (
@@ -23,17 +20,11 @@ function App() {
         <TransactionsToastList />
         <NotificationModal />
         <SignTransactionsModals className="custom-class-for-modals" />
-        <div className="flex flex-col h-[100dvh]">
+        <div className="flex flex-col h-[100dvh] bg-slate-200">
           <Navbar />
           <Content />
           <Footer />
         </div>
-        {/*<Routes>*/}
-        {/*  <Route path="/" element={<Home />} />*/}
-        {/*  <Route path="/about" element={<About />} />*/}
-        {/*  <Route path="/space" element={<Space />} />*/}
-        {/*  <Route path="*" element={<PageNotFound />} />*/}
-        {/*</Routes>*/}
       </DappProvider>
     </Router>
   );
