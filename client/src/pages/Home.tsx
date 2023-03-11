@@ -1,5 +1,6 @@
-import { Button, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 // const spaces = [
 //   {
@@ -29,8 +30,12 @@ export const Home = () => {
       {/*  ))}*/}
       {/*</Box>*/}
       <div className="flex w-full h-[75dvh] justify-center items-center">
-        <Button className="!bg-teal-300 hover:!bg-teal-400 hover:scale-105 mx-2">REPUTATION GIVER</Button>
-        <Button className="!bg-teal-300 hover:!bg-teal-400 hover:scale-105 mx-2">COLLECTOR</Button>
+        <NavLink to={"/reputation"} className="!bg-teal-300 hover:!bg-teal-400 hover:scale-105 mx-2 px-4 py-2 rounded-lg font-medium">
+          REPUTATION GIVER
+        </NavLink>
+        <NavLink to={"/collector"} className="!bg-teal-300 hover:!bg-teal-400 hover:scale-105 mx-2 px-4 py-2 rounded-lg font-medium">
+          COLLECTOR
+        </NavLink>
       </div>
     </Flex>
   );

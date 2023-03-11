@@ -5,6 +5,7 @@ import About from "../pages/About";
 import Home from "../pages/Home";
 import { PageNotFound } from "../pages/PageNotFound";
 import Space from "../pages/Space";
+import ReputationGiver from "./ReputationGiver";
 
 export const Content = () => {
   return (
@@ -12,6 +13,9 @@ export const Content = () => {
       <Box className="w-10/12 bg-slate-100 shadow-lg">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/reputation" element={<ReputationGiver />} />
+          {/*<Route path="/collector" element={<Collector />} />*/}
+
           <Route path="/about" element={<About />} />
           <Route path="/space" element={<Space />} />
           <Route path="*" element={<PageNotFound />} />
