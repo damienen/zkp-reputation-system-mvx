@@ -2,7 +2,7 @@
   "name": "durin_server",
   "version": "1.0.0",
   "description": "",
-  "main": "server.ts",
+  "main": "index.ts",
   "scripts": {
     "format": "prettier --write \"src/**/*.{js,ts,json}\"",
     "lint": "eslint src/**",

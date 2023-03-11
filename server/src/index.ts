@@ -31,8 +31,11 @@ export class MultiversXApi {
 
   async getCollectionsAddressOwns(stringAddress: string) {
     const address = new Address(stringAddress);
-    const collections = await axios.get(
+    let collections = await axios.get(
       `${API_URL}/accounts/${address}/roles/collections`
+    );
+    collections = collections.data.filter(
+      (collection: any) => collection.owner === address.bech32()
     );
     return { data: collections.data };
   }
