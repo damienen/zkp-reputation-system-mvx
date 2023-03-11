@@ -16,3 +16,6 @@ classes:
   - path: ./src/mxApi.ts
     type: jsonrpc
     methods: []
+  - path: ./src/reputationQuery.ts
+    type: jsonrpc
+    methods: []

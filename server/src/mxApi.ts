@@ -1,11 +1,11 @@
 require("dotenv").config();
 const axios = require("axios");
-import { api_url } from "./constants";
+import { apiUrl } from "./constants";
 
 import { Address } from "@multiversx/sdk-core/out";
 export class MultiversXApi {
   async checkMultiversXApiHealth() {
-    const hello = await axios.get(`${api_url}/hello`);
+    const hello = await axios.get(`${apiUrl}/hello`);
     return { data: hello.data };
   }
 
@@ -13,7 +13,7 @@ export class MultiversXApi {
     const address = new Address(stringAddress);
     try {
       let collections = await axios.get(
-        `${api_url}/accounts/${address}/roles/collections`
+        `${apiUrl}/accounts/${address}/roles/collections`
       );
       collections = collections.data.filter((collection: any) => {
         return collection.owner === address.bech32();
