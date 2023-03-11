@@ -7,5 +7,6 @@
   "tabWidth": 2,
   "bracketSameLine": true,
   "bracketSpacing": true,
-  "arrowParens": "always"
+  "arrowParens": "always",
+  "organizeImportsSkipDestructiveCodeActions": true
 }
