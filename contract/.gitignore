@@ -3,8 +3,12 @@
 /target/
 */target/
 
+.D
 # The mxpy output
 output*
 
 # Mandos test trace
 trace*.scen.json
+
+
+.DS_Store
