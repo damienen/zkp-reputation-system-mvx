@@ -52,7 +52,7 @@ jobs:
         with:
           name: genezio-generated-sdk
           path: ./client/src/sdk
-      - name: Buld the frontend code
+      - name: Build the frontend code
         working-directory: ./client
         run: npm i && npm run build
         
