@@ -54,8 +54,9 @@ export class Contract {
               mintedSupply: campaign["minted_supply"].toNumber(),
               startTimestamp: campaign["start"].toNumber(),
               endTimestamp: campaign["end"].toNumber(),
-              creationDate: campaign["create_date"].toNumber(),
-              requireWhitelist: campaign["require_whitelist"].toNumber(),
+              creationDate: campaign["created_date"].toNumber(),
+              requireWhitelist: !!campaign["require_whitelist"],
+              automated: !!campaign["automated"],
             };
           }),
         },
