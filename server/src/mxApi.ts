@@ -1,3 +1,4 @@
+require("dotenv").config();
 const axios = require("axios");
 const API_URL = process.env.BLAST_API_URL;
 
@@ -10,12 +11,16 @@ export class MultiversXApi {
 
   async getCollectionsAddressOwns(stringAddress: string) {
     const address = new Address(stringAddress);
-    let collections = await axios.get(
-      `${API_URL}/accounts/${address}/roles/collections`
-    );
-    collections = collections.data.filter(
-      (collection: any) => collection.owner === address.bech32()
-    );
-    return { data: collections.data };
+    try {
+      let collections = await axios.get(
+        `${API_URL}/accounts/${address}/roles/collections`
+      );
+      collections = collections.data.filter((collection: any) => {
+        return collection.owner === address.bech32();
+      });
+      return { data: collections };
+    } catch (error) {
+      return { data: [] };
+    }
   }
 }
