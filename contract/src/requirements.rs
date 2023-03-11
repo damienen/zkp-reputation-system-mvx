@@ -1,7 +1,8 @@
 use crate::{
+    constants::{MAX_NUMBER_OF_BULK_WHITELIST, MIN_NUMBER_OF_BULK_WHITELIST},
     errors::{
-        ERR_INVALID_PERIOD, ERR_NOT_IN_TIME_PERIOD, ERR_SC_NOT_READY, ERR_SPACE_IS_PAUSED,
-        ERR_VALUE_NOT_GREATER_THAN_ZERO,
+        ERR_INVALID_PERIOD, ERR_NOT_IN_RANGE, ERR_NOT_IN_TIME_PERIOD, ERR_SC_NOT_READY,
+        ERR_SPACE_IS_PAUSED, ERR_VALUE_NOT_GREATER_THAN_ZERO,
     },
     storage,
 };
@@ -45,6 +46,13 @@ pub trait RequirementsModule: storage::StorageModule {
         require!(
             current_timestamp >= start && current_timestamp <= end,
             ERR_NOT_IN_TIME_PERIOD
+        );
+    }
+
+    fn require_number_of_addresses_in_bulk_is_valid(&self, number: &usize) {
+        require!(
+            number <= &MAX_NUMBER_OF_BULK_WHITELIST && number >= &MIN_NUMBER_OF_BULK_WHITELIST,
+            ERR_NOT_IN_RANGE
         );
     }
 }

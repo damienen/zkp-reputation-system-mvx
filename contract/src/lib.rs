@@ -2,9 +2,15 @@
 
 use storage::{Campaign, Space};
 
+use crate::errors::{
+    ERR_CAMPAIGN_DOES_NOT_REQUIRE_WHITELIST, ERR_NOTHING_TO_CLAIM, ERR_NOT_WHITELISTED,
+    ERR_ONLY_ADMIN_CAN_WHITELIST_PARTICIPANTS,
+};
+
 multiversx_sc::imports!();
 
 pub mod common_utils;
+pub mod constants;
 pub mod errors;
 pub mod requirements;
 pub mod storage;
@@ -14,7 +20,7 @@ pub mod views;
 pub trait Reputation:
     storage::StorageModule
     + requirements::RequirementsModule
-    + common_utils::CommonUtils
+    + common_utils::CommonUtilsModule
     + views::ViewsModule
 {
     #[init]
@@ -39,8 +45,9 @@ pub trait Reputation:
         name: ManagedBuffer,
         media: ManagedBuffer,
         claim_amount: BigUint,
+        automated: bool, // for front end
         require_whitelist: bool,
-        opt_supply: OptionalValue<BigUint>,
+        opt_supply: Option<BigUint>, // Some or None
         opt_period: OptionalValue<MultiValue2<u64, u64>>,
     ) {
         self.require_is_ready();
@@ -56,7 +63,7 @@ pub trait Reputation:
             .unwrap_or_else(|| MultiValue2((0u64, 0u64)))
             .into_tuple();
 
-        let max_supply = opt_supply.into_option().unwrap_or_default();
+        let max_supply = opt_supply.unwrap_or_default();
 
         if !require_whitelist {
             self.require_value_is_positive(&max_supply);
@@ -78,7 +85,7 @@ pub trait Reputation:
             &name,
             &BigUint::zero(),
             &ManagedBuffer::new(),
-            &00,
+            &00, // ened att
             &self.create_uris(media),
         );
 
@@ -89,6 +96,7 @@ pub trait Reputation:
             nonce,
             name,
             claim_amount,
+            automated,
             max_supply,
             minted_supply: BigUint::zero(),
             start,
@@ -98,6 +106,153 @@ pub trait Reputation:
         };
 
         self.campaigns(&token_identifier).insert(nonce, campaign);
+    }
+
+    #[endpoint(claim)]
+    fn claim(&self, token_identifier: TokenIdentifier, nonce: u64) {
+        self.require_is_ready();
+        let caller = self.blockchain().get_caller();
+
+        self.require_space_not_paused(&token_identifier);
+
+        let mut campaign = self.get_campaign(&token_identifier, nonce);
+
+        if campaign.start > 0u64 && campaign.end > 0u64 {
+            self.require_is_in_time_period(campaign.start, campaign.end);
+        }
+
+        match campaign.require_whitelist {
+            false => {
+                let already_claimed = self
+                    .already_claimed(&token_identifier, nonce)
+                    .contains(&caller);
+
+                require!(
+                    !already_claimed && campaign.minted_supply < campaign.max_supply,
+                    ERR_NOTHING_TO_CLAIM
+                );
+
+                self.send()
+                    .esdt_local_mint(&token_identifier, nonce, &campaign.claim_amount);
+                self.send()
+                    .direct_esdt(&caller, &token_identifier, nonce, &campaign.claim_amount);
+
+                campaign.minted_supply += &campaign.claim_amount;
+
+                self.already_claimed(&token_identifier, nonce)
+                    .insert(caller);
+            }
+            true => {
+                require!(
+                    self.campaign_whitelist(&token_identifier, nonce)
+                        .contains(&caller),
+                    ERR_NOT_WHITELISTED
+                );
+
+                let eligible_amount = self
+                    .claimable_address_amount(&caller)
+                    .get(&token_identifier)
+                    .and_then(|f| f.get(&nonce)) // this can return None
+                    .unwrap_or_default();
+
+                require!(eligible_amount > 0, ERR_NOTHING_TO_CLAIM);
+
+                self.send()
+                    .esdt_local_mint(&token_identifier, nonce, &eligible_amount);
+
+                self.send()
+                    .direct_esdt(&caller, &token_identifier, nonce, &eligible_amount);
+
+                campaign.minted_supply += &eligible_amount;
+
+                self.claimable_address_amount(&caller)
+                    .get(&token_identifier)
+                    .unwrap() // will never have None
+                    .remove(&nonce);
+
+                self.already_claimed(&token_identifier, nonce)
+                    .insert(caller);
+            }
+        }
+        self.campaigns(&token_identifier).insert(nonce, campaign);
+    }
+
+    #[endpoint(whitelistParticipants)]
+    fn whitelist_participants(&self, nonce: u64, addresses: MultiValueEncoded<ManagedAddress>) {
+        self.require_is_ready();
+        let caller = self.blockchain().get_caller();
+
+        let space = self.get_space(&caller); // will panic if the space doesn't exist
+
+        self.require_space_not_paused(&space.space_id); // checks if space is paused
+
+        let mut campaign = self.get_campaign(&space.space_id, nonce); // will panic if the campaign doesn't exist
+
+        if campaign.automated {
+            require!(
+                caller == self.administrator().get(),
+                ERR_ONLY_ADMIN_CAN_WHITELIST_PARTICIPANTS
+            );
+        }
+
+        require!(
+            campaign.require_whitelist,
+            ERR_CAMPAIGN_DOES_NOT_REQUIRE_WHITELIST
+        );
+
+        let current_timestamp = self.blockchain().get_block_timestamp();
+
+        self.require_number_of_addresses_in_bulk_is_valid(&addresses.len());
+
+        campaign.created_date = current_timestamp;
+        campaign.max_supply += BigUint::from(addresses.len());
+
+        for address in addresses.into_iter() {
+            self.claimable_address_amount(&address)
+                .insert_default(space.space_id.clone());
+
+            self.claimable_address_amount(&address)
+                .get(&space.space_id)
+                .unwrap() // will never have None
+                .insert(campaign.nonce, campaign.claim_amount.clone());
+
+            self.campaign_whitelist(&campaign.space_id, nonce)
+                .insert(address);
+        }
+
+        self.campaigns(&space.space_id).insert(nonce, campaign);
+    }
+
+    #[endpoint(delistParticipants)]
+    fn delist_participants(&self, nonce: u64, addresses: MultiValueEncoded<ManagedAddress>) {
+        self.require_is_ready();
+        let caller = self.blockchain().get_caller();
+        let space = self.get_space(&caller);
+
+        self.require_space_not_paused(&space.space_id); // checks if space is paused
+
+        let mut campaign = self.get_campaign(&space.space_id, nonce);
+        require!(
+            campaign.require_whitelist,
+            ERR_CAMPAIGN_DOES_NOT_REQUIRE_WHITELIST
+        );
+        let current_timestamp = self.blockchain().get_block_timestamp();
+
+        self.require_number_of_addresses_in_bulk_is_valid(&addresses.len());
+
+        campaign.created_date = current_timestamp;
+        campaign.max_supply -= BigUint::from(addresses.len());
+
+        for address in addresses.into_iter() {
+            self.claimable_address_amount(&address)
+                .get(&campaign.space_id)
+                .unwrap() // will never have None
+                .remove(&campaign.nonce);
+
+            self.campaign_whitelist(&campaign.space_id, nonce)
+                .swap_remove(&address);
+        }
+        self.campaigns(&space.space_id).insert(nonce, campaign);
     }
 
     #[only_owner]
