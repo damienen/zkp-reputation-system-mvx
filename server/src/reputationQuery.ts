@@ -24,6 +24,22 @@ export class Contract {
     abi: this.abi,
   });
 
+  private mapCampaign(campaign: any) {
+    return {
+      spaceId: campaign["space_id"].toString(),
+      nonce: campaign["nonce"].toNumber(),
+      name: campaign["name"].toString(),
+      claimAmount: campaign["claim_amount"].toNumber(),
+      maxSupply: campaign["max_supply"].toNumber(),
+      mintedSupply: campaign["minted_supply"].toNumber(),
+      startTimestamp: campaign["start"].toNumber(),
+      endTimestamp: campaign["end"].toNumber(),
+      creationDate: campaign["created_date"].toNumber(),
+      requireWhitelist: !!campaign["require_whitelist"],
+      automated: !!campaign["automated"],
+    };
+  }
+
   async getSpace(address: string) {
     const interaction = this.contract.methodsExplicit.viewSpace([
       new AddressValue(new Address(address)),
@@ -45,19 +61,7 @@ export class Contract {
           spaceId: returnValue["space"]["space_id"].toString(),
           spaceName: returnValue["space"]["name"].toString(),
           campaigns: returnValue["campaigns"].map((campaign: any) => {
-            return {
-              spaceId: returnValue["space"]["space_id"].toString(),
-              nonce: campaign["nonce"].toNumber(),
-              name: campaign["name"].toString(),
-              claimAmount: campaign["claim_amount"].toNumber(),
-              maxSupply: campaign["max_supply"].toNumber(),
-              mintedSupply: campaign["minted_supply"].toNumber(),
-              startTimestamp: campaign["start"].toNumber(),
-              endTimestamp: campaign["end"].toNumber(),
-              creationDate: campaign["created_date"].toNumber(),
-              requireWhitelist: !!campaign["require_whitelist"],
-              automated: !!campaign["automated"],
-            };
+            return this.mapCampaign(campaign);
           }),
         },
       };
