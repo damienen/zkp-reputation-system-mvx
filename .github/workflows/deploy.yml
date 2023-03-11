@@ -19,7 +19,7 @@ jobs:
       - uses: Genez-io/genezio-github-action@main
         with:
           genezio-version: latest
-          token: $${{ secrets.GENEZIO_TOKEN }}
+          token: ${{ secrets.GENEZIO_TOKEN }}
       - name: Test genezio installation
         run: genezio ls
         
