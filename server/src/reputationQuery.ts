@@ -5,6 +5,8 @@ import {
   ResultsParser,
   SmartContract,
   SmartContractAbi,
+  TokenIdentifierValue,
+  U64Value,
   VariadicValue,
 } from "@multiversx/sdk-core";
 import { ProxyNetworkProvider } from "@multiversx/sdk-network-providers/out";
@@ -69,4 +71,60 @@ export class Contract {
       return { data: {} };
     }
   }
+
+  async getClaims(address: string){
+    const interaction = this.contract.methodsExplicit.viewClaims([
+      new AddressValue(new Address(address)),
+      ]);
+      const query = interaction.buildQuery();
+      const queryResponse = await this.networkProvider.queryContract(query);
+      const endpointDefinition = interaction.getEndpoint();
+      const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
+        queryResponse,
+        endpointDefinition
+      );
+      if (returnCode.isSuccess()) {
+        let firstValueAsStruct = firstValue as VariadicValue;
+        const returnValue = firstValueAsStruct.valueOf();
+        console.log(returnValue);
+        return returnValue.map((claim: any) => {
+          return {
+            campaign: this.mapCampaign(claim["campaign"]),
+            amount: claim["amount"].toNumber(),
+          };
+        });
+      }else{
+        return {data: {}};
+      }
+  }
+  async getIndividualCampaign(tokenIdentifier: string, nonce: number, address: string){
+    const interaction = this.contract.methodsExplicit.getIndividualCampaign([
+      new TokenIdentifierValue(tokenIdentifier),
+      new U64Value(nonce),
+      new AddressValue(new Address(address)),
+    ]);
+    const query = interaction.buildQuery();
+    const queryResponse = await this.networkProvider.queryContract(query);
+    const endpointDefinition = interaction.getEndpoint();
+    const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
+      queryResponse,
+      endpointDefinition
+    );
+
+    if (returnCode.isSuccess()) {
+      let firstValueAsStruct = firstValue as VariadicValue;
+      const returnValue = firstValueAsStruct.valueOf();
+      console.log(returnValue);
+      return {
+        data: {
+          campaign: this.mapCampaign(returnValue["campaign"]),
+          amount: returnValue["amount"].toNumber(),
+          whitelisted: !!returnValue["whitelisted"],
+          claimed: !!returnValue["claimed"],
+        },
+      };
+    }else{
+      return {data: {}};
+    }
+}
 }
