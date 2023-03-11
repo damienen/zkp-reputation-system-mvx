@@ -1,5 +1,5 @@
 name: durin-reputation
-region: eu-central-2
+region: eu-central-1
 cloudProvider: aws
 sdk:
   language: ts
