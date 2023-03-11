@@ -1,7 +1,4 @@
 name: deploy
-env:
-  GENEZIO_TOKEN: ${{ secrets.GENEZIO_TOKEN }}
-  BLAST_API_URL: ${{ secrets.BLAST_API_URL }}
 on:
   push:
     branches:
@@ -22,7 +19,7 @@ jobs:
       - uses: Genez-io/genezio-github-action@main
         with:
           genezio-version: latest
-          token: $GENEZIO_TOKEN
+          token: ${{ secrets.GENEZIO_TOKEN }}
       - name: Test genezio installation
         run: genezio ls
 
@@ -30,7 +27,7 @@ jobs:
         working-directory: ./server
         run: |
           touch .env
-          echo BLAST_API_URL=$BLAST_API_URL >> .env
+          echo BLAST_API_URL=${{ secrets.BLAST_API_URL }} >> .env
 
       - name: Deploy backend
         working-directory: ./server
@@ -52,7 +49,7 @@ jobs:
       - uses: Genez-io/genezio-github-action@main
         with:
           genezio-version: latest
-          token: $GENEZIO_TOKEN
+          token: ${{ secrets.GENEZIO_TOKEN }}
       - name: Test genezio installation
         run: genezio ls
 
