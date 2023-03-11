@@ -1,6 +1,6 @@
-import { Flex, Input, Stack, Text } from "@chakra-ui/react";
+import { Flex, Input, Link, Stack, Text } from "@chakra-ui/react";
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink as RouterLink } from "react-router-dom";
 
 export const ReputationNamespace = () => {
   return (
@@ -13,9 +13,12 @@ export const ReputationNamespace = () => {
           <Input className="" placeholder="Name" />
           <Text className="text-red-400 !-mt-2 !ml-1.5">This field is required!</Text>
         </Stack>
-        <NavLink to="" className="mt-4 !w-1/4 !bg-teal-300 hover:!bg-teal-400 hover:scale-105 mx-2 px-4 py-2 rounded-lg font-medium text-center">
+        <Link
+          as={RouterLink}
+          to="/space"
+          className="mt-4 !w-1/4 !bg-teal-300 hover:!bg-teal-400 hover:scale-105 mx-2 px-4 py-2 rounded-lg font-medium text-center">
           Designate space
-        </NavLink>
+        </Link>
       </Flex>
     </div>
   );

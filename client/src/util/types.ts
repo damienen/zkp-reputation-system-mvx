@@ -4,15 +4,15 @@ export type Space = {
 };
 
 export type Campaign = {
-  space_id: string;
+  spaceId: string;
   nonce: number;
   name: string;
-  claim_amount: number;
-  max_supply: number;
-  minted_supply: number;
-  start: Date;
-  end: Date;
-  created_date: Date;
-  require_whitelist: boolean;
+  claimAmount: number;
+  maxSupply: number;
+  mintedSupply: number;
+  startTimestamp: Date;
+  endTimestamp: Date;
+  creationDate: Date;
+  requireWhitelist: boolean;
   automated: boolean;
 };
