@@ -14,7 +14,7 @@ export const ReputationGiver = () => {
   const [tickerValue, setTickerValue] = useState<string>("");
   const [isError, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
+  console.log(nameValue, tickerValue, errorMessage);
   // useEffect(() => {
   //   if (nameValue.length >= 3 && nameValue.length <= 20 && nameValue.match("^[a-zA-Z0-9_]*$") !== null) {
   //     setError(false);
