@@ -1,7 +1,4 @@
 name: deploy
-env:
-  GENEZIO_TOKEN: ${{ secrets.GENEZIO_TOKEN }}
-  BLAST_API_URL: ${{ secrets.BLAST_API_URL }}
 on:
   push:
     branches:
@@ -26,7 +23,12 @@ jobs:
       - name: Test genezio installation
         run: genezio ls
 
-        # Project can be checked at https://app.genez.io
+      - name: Create env file
+        working-directory: ./server
+        run: |
+          touch .env
+          echo BLAST_API_URL=${{ secrets.BLAST_API_URL }} >> .env
+
       - name: Deploy backend
         working-directory: ./server
         run: npm i && genezio deploy
