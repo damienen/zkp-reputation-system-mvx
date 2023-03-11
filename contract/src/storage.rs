@@ -33,6 +33,7 @@ pub struct Campaign<M: ManagedTypeApi> {
     pub nonce: u64,
     pub name: ManagedBuffer<M>,
     pub claim_amount: BigUint<M>,
+    pub automated: bool,
     pub max_supply: BigUint<M>,
     pub minted_supply: BigUint<M>,
     pub start: u64,
@@ -53,6 +54,19 @@ pub trait StorageModule {
     #[view(getCampaignWhiteList)]
     #[storage_mapper("campaign_whitelist")]
     fn campaign_whitelist(
+        &self,
+        space_id: &TokenIdentifier,
+        nonce: u64,
+    ) -> UnorderedSetMapper<ManagedAddress>;
+
+    #[storage_mapper("claimable_address_amount")]
+    fn claimable_address_amount(
+        &self,
+        address: &ManagedAddress,
+    ) -> MapStorageMapper<TokenIdentifier, MapMapper<u64, BigUint>>;
+
+    #[storage_mapper("already_claimed")]
+    fn already_claimed(
         &self,
         space_id: &TokenIdentifier,
         nonce: u64,

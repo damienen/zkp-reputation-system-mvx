@@ -18,6 +18,14 @@ export class Contract {
         return await Contract.remote.call("Contract.getSpace", address)  
   }
 
+  static async getClaims(address: string): Promise<any> {
+        return await Contract.remote.call("Contract.getClaims", address)  
+  }
+
+  static async getIndividualCampaign(tokenIdentifier: string, nonce: number, address: string): Promise<any> {
+        return await Contract.remote.call("Contract.getIndividualCampaign", tokenIdentifier, nonce, address)  
+  }
+
   
 
 }

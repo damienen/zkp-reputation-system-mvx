@@ -7,7 +7,7 @@ multiversx_sc::imports!();
 multiversx_sc::derive_imports!();
 
 #[multiversx_sc::module]
-pub trait CommonUtils: storage::StorageModule {
+pub trait CommonUtilsModule: storage::StorageModule {
     fn get_space(&self, address: &ManagedAddress) -> Space<Self::Api> {
         let space = self
             .spaces()

@@ -12,3 +12,11 @@ trace*.scen.json
 
 
 .DS_Store
+
+*.pem
+
+mxpy.data-storage.json
+
+deploy-devnet.interaction.json
+
+rust_tests.rs
