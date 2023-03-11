@@ -1,8 +1,9 @@
 import { Text } from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
-import { ExtensionLoginButton, LedgerLoginButton, WalletConnectLoginButton, WebWalletLoginButton } from "@multiversx/sdk-dapp/UI";
 import { useGetAccount, useGetAccountInfo } from "@multiversx/sdk-dapp/hooks";
+import { ExtensionLoginButton, LedgerLoginButton, WalletConnectLoginButton, WebWalletLoginButton } from "@multiversx/sdk-dapp/UI";
 import { logout } from "@multiversx/sdk-dapp/utils";
+import React from "react";
+import { NavLink } from "react-router-dom";
 
 const navigationItems = [
   {

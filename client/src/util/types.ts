@@ -14,4 +14,5 @@ export type Campaign = {
   end: Date;
   created_date: Date;
   require_whitelist: boolean;
+  automated: boolean;
 };
