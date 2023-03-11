@@ -6,18 +6,21 @@ import Home from "../pages/Home";
 import { PageNotFound } from "../pages/PageNotFound";
 import Space from "../pages/Space";
 import ReputationGiver from "./ReputationGiver";
+import ReputationNamespace from "./ReputationNamespace";
+import ReputationRoles from "./ReputationRoles";
 
 export const Content = () => {
   return (
     <div className="flex justify-center grow bg-slate-100 shadow-lg">
       <Box className="w-10/12 bg-slate-100 shadow-lg">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/reputation" element={<ReputationGiver />} />
-          {/*<Route path="/collector" element={<Collector />} />*/}
+          <Route index path="" element={<Home />} />
+          <Route path="reputation" element={<ReputationGiver />} />
+          <Route path="reputation/roles" element={<ReputationRoles />} />
+          <Route path="reputation/roles/namespace" element={<ReputationNamespace />} />
 
-          <Route path="/about" element={<About />} />
-          <Route path="/space" element={<Space />} />
+          <Route path="about" element={<About />} />
+          <Route path="space" element={<Space />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Box>

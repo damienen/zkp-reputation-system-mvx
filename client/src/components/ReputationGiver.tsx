@@ -1,5 +1,6 @@
-import { Button, Input, Stack, Text } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { Input, Stack, Text } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const errorMessageContain = {
   nameCharactersError: "Name must be between 3 and 20 characters",
@@ -54,12 +55,12 @@ export const ReputationGiver = () => {
         <Text className="font-medium">You did not created a space yet!</Text>
         <Stack className="gap-3 mt-2">
           {!isError && <Input placeholder="Name" size="md" onChange={(e) => setNameValue(e.target.value)} />}
-          {isError && <Input isInvalid placeholder="Name" errorBorderColor="crimson" size="md" onChange={(e) => setNameValue(e.target.value)} />}
-          <Input placeholder="Ticker" size="md" onBlur={(e) => handleTickerError(e)} />
+          {/*{isError && <Input isInvalid placeholder="Name" errorBorderColor="crimson" size="md" onChange={(e) => setNameValue(e.target.value)} />}*/}
+          <Input placeholder="Ticker" size="md" onFocus={(e) => handleTickerError(e)} />
         </Stack>
-        <Button className="mt-4 !w-1/4 !bg-teal-300" onClick={() => alert("ceva")}>
+        <NavLink to={"roles"} className="mt-4 !w-1/4 !bg-teal-300 hover:!bg-teal-400 hover:scale-105 mx-2 px-4 py-2 rounded-lg font-medium text-center">
           Create
-        </Button>
+        </NavLink>
       </div>
     </div>
   );

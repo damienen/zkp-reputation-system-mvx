@@ -9,17 +9,17 @@ const navigationItems = [
   {
     title: "Home",
     icon: "home",
-    path: "/",
+    path: "",
   },
   {
     title: "About",
     icon: "info",
-    path: "/about",
+    path: "about",
   },
   {
     title: "Space",
     icon: "info",
-    path: "/space",
+    path: "space",
   },
 ];
 
