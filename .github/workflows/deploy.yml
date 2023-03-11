@@ -27,10 +27,10 @@ jobs:
         run: genezio ls
 
       - name: Create env file
+        working-directory: ./server
         run: |
           touch .env
           echo BLAST_API_URL=$BLAST_API_URL >> .env
-          cat .env
 
       - name: Deploy backend
         working-directory: ./server
@@ -52,7 +52,7 @@ jobs:
       - uses: Genez-io/genezio-github-action@main
         with:
           genezio-version: latest
-          token: ${{ secrets.GENEZIO_TOKEN }}
+          token: $GENEZIO_TOKEN
       - name: Test genezio installation
         run: genezio ls
 
