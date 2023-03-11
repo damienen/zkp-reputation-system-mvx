@@ -14,10 +14,6 @@ export class Server {
         return await Server.remote.call("Server.checkInternalServerHealth")  
   }
 
-  static async checkMultiversXApiHealth(): Promise<any> {
-        return await Server.remote.call("Server.checkMultiversXApiHealth")  
-  }
-
   
 
 }
