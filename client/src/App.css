@@ -7,3 +7,13 @@
 index, body, html {
   width: 100%;
 }
+
+body {
+  @apply font-dmSans;
+}
+
+.dapp-core-component__extensionLoginButton-styles__no-extension-button-title,
+.dapp-core-component__extensionLoginButton-styles__no-extension-button-wrapper {
+  display: none;
+}
+
