@@ -26,9 +26,18 @@ pub trait CommonUtilsModule: storage::StorageModule {
         campaign
     }
 
-    fn create_uris(&self, media: ManagedBuffer) -> ManagedVec<ManagedBuffer> {
+    fn create_uris(
+        &self,
+        media: ManagedBuffer,
+        metadata: ManagedBuffer,
+    ) -> ManagedVec<ManagedBuffer> {
         let mut uris = ManagedVec::new();
-        uris.push(media);
+        let mut media_uri = ManagedBuffer::from("https://ipfs.io/ipfs/");
+        media_uri.append(&media);
+        uris.push(media_uri);
+        let mut metadata_uri = ManagedBuffer::from("https://ipfs.io/ipfs/");
+        metadata_uri.append(&metadata);
+        uris.push(metadata_uri);
         uris
     }
 }
