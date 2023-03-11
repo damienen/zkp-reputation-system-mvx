@@ -12,6 +12,8 @@ import {
 import { PageNotFound } from "./pages/PageNotFound";
 import About from "./pages/About";
 import Space from "./pages/Space";
+import Content from "./components/Content";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -27,13 +29,17 @@ function App() {
         <TransactionsToastList />
         <NotificationModal />
         <SignTransactionsModals className="custom-class-for-modals" />
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/space" element={<Space />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
+        <div className="flex flex-col h-[100dvh]">
+          <Navbar />
+          <Content />
+          <Footer />
+        </div>
+        {/*<Routes>*/}
+        {/*  <Route path="/" element={<Home />} />*/}
+        {/*  <Route path="/about" element={<About />} />*/}
+        {/*  <Route path="/space" element={<Space />} />*/}
+        {/*  <Route path="*" element={<PageNotFound />} />*/}
+        {/*</Routes>*/}
       </DappProvider>
     </Router>
   );

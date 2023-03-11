@@ -1,11 +1,11 @@
 import React from "react";
 import { Text } from "@chakra-ui/react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   ExtensionLoginButton,
   LedgerLoginButton,
-  WebWalletLoginButton,
   WalletConnectLoginButton,
+  WebWalletLoginButton,
 } from "@multiversx/sdk-dapp/UI";
 import { useGetAccount, useGetAccountInfo } from "@multiversx/sdk-dapp/hooks";
 import { logout } from "@multiversx/sdk-dapp/utils";
@@ -35,8 +35,8 @@ export const Navbar = () => {
   const wallet = address?.length;
 
   return (
-    <div className="w-full flex flex-row justify-around py-1.5 bg-teal-300">
-      <div className="flex flex-col">
+    <div className="flex-none w-full h-14 grid grid-cols-3 py-1.5 bg-teal-300">
+      <div className="flex flex-col ml-20">
         <Text className="text-sm">Reputation</Text>
         <Text className="text-base">Client</Text>
       </div>
