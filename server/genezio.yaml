@@ -10,6 +10,6 @@ frontend:
   path: ../client/build
   subdomain: durin-mellon-elrond
 classes:
-  - path: ./src/server.ts
+  - path: ./src/index.ts
     type: jsonrpc
     methods: []
