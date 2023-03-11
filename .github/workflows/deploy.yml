@@ -15,11 +15,6 @@ jobs:
   deploy-backend:
     runs-on: ubuntu-latest
     steps:
-      - name: Create env file
-        run: |
-          touch .env
-          echo BLAST_API_URL=$BLAST_API_URL >> .env
-          cat .env
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -31,7 +26,12 @@ jobs:
       - name: Test genezio installation
         run: genezio ls
 
-        # Project can be checked at https://app.genez.io
+      - name: Create env file
+        run: |
+          touch .env
+          echo BLAST_API_URL=$BLAST_API_URL >> .env
+          cat .env
+
       - name: Deploy backend
         working-directory: ./server
         run: npm i && genezio deploy
