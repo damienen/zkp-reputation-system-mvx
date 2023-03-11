@@ -57,6 +57,10 @@
                     "type": "BigUint"
                 },
                 {
+                    "name": "automated",
+                    "type": "bool"
+                },
+                {
                     "name": "require_whitelist",
                     "type": "bool"
                 },
@@ -296,7 +300,7 @@
             ]
         },
         {
-            "name": "viewClaimed",
+            "name": "getIndividualCampaign",
             "mutability": "readonly",
             "inputs": [
                 {
@@ -314,7 +318,7 @@
             ],
             "outputs": [
                 {
-                    "type": "bool"
+                    "type": "UserView"
                 }
             ]
         }
@@ -340,6 +344,10 @@
                 {
                     "name": "claim_amount",
                     "type": "BigUint"
+                },
+                {
+                    "name": "automated",
+                    "type": "bool"
                 },
                 {
                     "name": "max_supply",
@@ -403,6 +411,27 @@
                 {
                     "name": "campaigns",
                     "type": "List<Campaign>"
+                }
+            ]
+        },
+        "UserView": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "campaign",
+                    "type": "Campaign"
+                },
+                {
+                    "name": "amount",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "whitelisted",
+                    "type": "bool"
+                },
+                {
+                    "name": "claimed",
+                    "type": "bool"
                 }
             ]
         }
