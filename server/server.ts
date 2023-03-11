@@ -18,6 +18,9 @@ export class Server {
   checkInternalServerHealth() {
     return { data: "hello" };
   }
+}
+
+export class MultiversXApi {
   async checkMultiversXApiHealth() {
     const hello = await axios.get(`${API_URL}/hello`);
     return { data: hello.data };
