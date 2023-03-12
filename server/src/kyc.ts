@@ -13,7 +13,12 @@ export class KycWebhook {
       if (password && request.body.status === "approved") {
         message = await backend.checkKycKey(key, password);
         const receiver = await reputationQuery.getKycNotification(key);
-        if (receiver.data instanceof Address) {
+        console.log(receiver);
+        if (
+          receiver.data instanceof Address &&
+          receiver.data.hex() !=
+            "0000000000000000000000000000000000000000000000000000000000000000"
+        ) {
           await backend.sendxPortalNotification(receiver.data, password);
         }
       }

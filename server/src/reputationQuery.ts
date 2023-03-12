@@ -18,9 +18,6 @@ export class Contract {
   json = JSON.parse(JSON.stringify(jsonData));
   abiRegistry = AbiRegistry.create(this.json);
   abi = new SmartContractAbi(this.abiRegistry, ["Reputation"]);
-  networkProvider = new ProxyNetworkProvider(
-    "https://devnet-gateway.multiversx.com"
-  );
 
   contract = new SmartContract({
     address: new Address(reputationContractAddress),
@@ -44,11 +41,14 @@ export class Contract {
   }
 
   async getSpace(address: string) {
+    const networkProvider = new ProxyNetworkProvider(
+      "https://devnet-gateway.multiversx.com"
+    );
     const interaction = this.contract.methodsExplicit.viewSpace([
       new AddressValue(new Address(address)),
     ]);
     const query = interaction.buildQuery();
-    const queryResponse = await this.networkProvider.queryContract(query);
+    const queryResponse = await networkProvider.queryContract(query);
     const endpointDefinition = interaction.getEndpoint();
     const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
       queryResponse,
@@ -74,11 +74,14 @@ export class Contract {
   }
 
   async getClaims(address: string) {
+    const networkProvider = new ProxyNetworkProvider(
+      "https://devnet-gateway.multiversx.com"
+    );
     const interaction = this.contract.methodsExplicit.viewClaims([
       new AddressValue(new Address(address)),
     ]);
     const query = interaction.buildQuery();
-    const queryResponse = await this.networkProvider.queryContract(query);
+    const queryResponse = await networkProvider.queryContract(query);
     const endpointDefinition = interaction.getEndpoint();
     const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
       queryResponse,
@@ -107,13 +110,16 @@ export class Contract {
     nonce: number,
     address: string
   ) {
+    const networkProvider = new ProxyNetworkProvider(
+      "https://devnet-gateway.multiversx.com"
+    );
     const interaction = this.contract.methodsExplicit.getIndividualCampaign([
       new TokenIdentifierValue(tokenIdentifier),
       new U64Value(nonce),
       new AddressValue(new Address(address)),
     ]);
     const query = interaction.buildQuery();
-    const queryResponse = await this.networkProvider.queryContract(query);
+    const queryResponse = await networkProvider.queryContract(query);
     const endpointDefinition = interaction.getEndpoint();
     const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
       queryResponse,
@@ -138,11 +144,14 @@ export class Contract {
   }
 
   async getKycNotification(key: string) {
+    const networkProvider = new ProxyNetworkProvider(
+      "https://devnet-gateway.multiversx.com"
+    );
     const interaction = this.contract.methodsExplicit.getKycNotification([
       new StringValue(key),
     ]);
     const query = interaction.buildQuery();
-    const queryResponse = await this.networkProvider.queryContract(query);
+    const queryResponse = await networkProvider.queryContract(query);
     const endpointDefinition = interaction.getEndpoint();
     const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
       queryResponse,
@@ -152,7 +161,6 @@ export class Contract {
     if (returnCode.isSuccess()) {
       let firstValueAsStruct = firstValue as AddressValue;
       const returnValue = firstValueAsStruct.valueOf();
-      console.log(returnValue);
       return {
         data: returnValue,
       };
