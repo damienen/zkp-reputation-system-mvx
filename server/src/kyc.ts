@@ -6,7 +6,7 @@ export class KycWebhook {
       const key = request.body.key;
       const password = walletPassword;
       const backend = new BackendAccount();
-      if (password) {
+      if (password && request.body.status === "approved") {
         backend.checkKycKey(key, password);
       }
       return {
