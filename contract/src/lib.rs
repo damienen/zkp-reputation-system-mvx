@@ -4,7 +4,6 @@ use storage::{Campaign, Space};
 
 use crate::errors::{
     ERR_CAMPAIGN_DOES_NOT_REQUIRE_WHITELIST, ERR_NOTHING_TO_CLAIM, ERR_NOT_WHITELISTED,
-    ERR_ONLY_ADMIN_CAN_WHITELIST_PARTICIPANTS,
 };
 
 multiversx_sc::imports!();
@@ -197,19 +196,23 @@ pub trait Reputation:
 
     #[endpoint(checkKycKey)]
     fn check_kyc_key(&self, key: ManagedBuffer) {
-        let user = self.kyc_address_keys().get(&key).unwrap_or_default();
-        let mut addresses = MultiValueEncoded::new();
-        addresses.push(user.clone());
-        if user.is_zero() {
-            self.kyc_backend_keys().insert(key);
-        } else {
-            let token_identifier = self.kyc_token_keys().get(&key).unwrap();
-            let nonce = self.kyc_nonce_keys().get(&key).unwrap();
-            self.whitelist_participants(token_identifier, nonce, addresses);
-            self.kyc_address_keys().remove(&key);
-            self.kyc_token_keys().remove(&key);
-            self.kyc_nonce_keys().remove(&key);
-            self.kyc_backend_keys().swap_remove(&key);
+        let user = self.kyc_address_keys().get(&key);
+
+        match user {
+            Option::None => {
+                self.kyc_backend_keys().insert(key);
+            }
+            Option::Some(user) => {
+                let mut addresses = MultiValueEncoded::new();
+                addresses.push(user.clone());
+                let token_identifier = self.kyc_token_keys().get(&key).unwrap();
+                let nonce = self.kyc_nonce_keys().get(&key).unwrap();
+                self.whitelist_participants(token_identifier, nonce, addresses);
+                self.kyc_address_keys().remove(&key);
+                self.kyc_token_keys().remove(&key);
+                self.kyc_nonce_keys().remove(&key);
+                self.kyc_backend_keys().swap_remove(&key);
+            }
         }
     }
 
@@ -221,18 +224,10 @@ pub trait Reputation:
         addresses: MultiValueEncoded<ManagedAddress>,
     ) {
         self.require_is_ready();
-        let caller = self.blockchain().get_caller();
 
         self.require_space_not_paused(&token_identifier); // checks if space is paused
 
         let mut campaign = self.get_campaign(&token_identifier, nonce); // will panic if the campaign doesn't exist
-
-        if campaign.automated {
-            require!(
-                caller == self.administrator().get(),
-                ERR_ONLY_ADMIN_CAN_WHITELIST_PARTICIPANTS
-            );
-        }
 
         require!(
             campaign.require_whitelist,
