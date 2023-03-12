@@ -84,6 +84,15 @@ pub trait StorageModule {
     #[storage_mapper("administrator")]
     fn administrator(&self) -> SingleValueMapper<ManagedAddress>;
 
+    #[storage_mapper("kyc_address_check")]
+    fn kyc_address_keys(&self) -> MapMapper<ManagedBuffer, ManagedAddress>;
+
+    #[storage_mapper("kyc_token_check")]
+    fn kyc_token_keys(&self) -> MapMapper<ManagedBuffer, TokenIdentifier>;
+
+    #[storage_mapper("kyc_nonce_check")]
+    fn kyc_nonce_keys(&self) -> MapMapper<ManagedBuffer, u64>;
+
     #[storage_mapper("kyc_check")]
-    fn check_kyc(&self) -> BiDiMapper<ManagedAddress, ManagedBuffer>;
+    fn kyc_backend_keys(&self) -> UnorderedSetMapper<ManagedBuffer>;
 }
