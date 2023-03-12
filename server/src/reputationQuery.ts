@@ -89,12 +89,14 @@ export class Contract {
       const returnValue = firstValueAsStruct.valueOf();
       console.log(returnValue);
       return {
-        data: returnValue.map((claim: any) => {
-          return {
-            campaign: this.mapCampaign(claim["campaign"]),
-            amount: claim["amount"].toNumber(),
-          };
-        }),
+        data: {
+          campaigns: returnValue.map((claim: any) => {
+            return {
+              campaign: this.mapCampaign(claim["campaign"]),
+              amount: claim["amount"].toNumber(),
+            };
+          }),
+        },
       };
     } else {
       return { data: {} };
