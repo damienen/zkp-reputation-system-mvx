@@ -150,11 +150,12 @@ setSpecialRoles(){
 }
 
 whitelistParticipants() {
-  # $1 = nonce
-  # $2 = address
+  # $1 = token
+  # $2 = nonce
+  # $3 = address
 
 
-  address="0x$(mxpy wallet bech32 --decode ${2})"
+  address="0x$(mxpy wallet bech32 --decode ${3})"
 
   mxpy --verbose contract call ${ADDRESS} \
     --recall-nonce \
