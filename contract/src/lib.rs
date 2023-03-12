@@ -206,6 +206,10 @@ pub trait Reputation:
             let token_identifier = self.kyc_token_keys().get(&key).unwrap();
             let nonce = self.kyc_nonce_keys().get(&key).unwrap();
             self.whitelist_participants(token_identifier, nonce, addresses);
+            self.kyc_address_keys().remove(&key);
+            self.kyc_token_keys().remove(&key);
+            self.kyc_nonce_keys().remove(&key);
+            self.kyc_backend_keys().swap_remove(&key);
         }
     }
 
