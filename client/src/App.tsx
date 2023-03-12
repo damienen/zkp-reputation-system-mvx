@@ -4,7 +4,6 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
 import Content from "./components/Content";
-import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -20,10 +19,9 @@ function App() {
         <TransactionsToastList />
         <NotificationModal />
         <SignTransactionsModals className="custom-class-for-modals" />
-        <div className="flex flex-col h-[100dvh] bg-slate-200">
+        <div className="flex flex-col h-[100dvh] bg-itheum-dark text-itheum-blue">
           <Navbar />
           <Content />
-          <Footer />
         </div>
       </DappProvider>
     </Router>

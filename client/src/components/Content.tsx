@@ -13,8 +13,8 @@ import CampaignDetail from "./CampaignDetail";
 
 export const Content = () => {
   return (
-    <div className="flex justify-center grow bg-slate-100 shadow-lg">
-      <Box className="w-10/12 bg-slate-100 shadow-lg">
+    <div className="flex justify-center grow shadow-lg">
+      <Box className="w-10/12 shadow-lg shadow-itheum-dark">
         <Routes>
           <Route index path="" element={<Home />} />
           <Route path="collector" element={<Claims />} />
