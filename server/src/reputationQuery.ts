@@ -88,14 +88,14 @@ export class Contract {
       let firstValueAsStruct = firstValue as VariadicValue;
       const returnValue = firstValueAsStruct.valueOf();
       console.log(returnValue);
-      return returnValue.map((claim: any) => {
-        return {
-          data: {
+      return {
+        data: returnValue.map((claim: any) => {
+          return {
             campaign: this.mapCampaign(claim["campaign"]),
             amount: claim["amount"].toNumber(),
-          },
-        };
-      });
+          };
+        }),
+      };
     } else {
       return { data: {} };
     }
