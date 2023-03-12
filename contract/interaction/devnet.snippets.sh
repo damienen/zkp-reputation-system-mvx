@@ -155,6 +155,8 @@ whitelistParticipants() {
   # $3 = address
 
 
+  
+  sft_token="0x$(echo -n ${1} | xxd -p -u | tr -d '\n')"
   address="0x$(mxpy wallet bech32 --decode ${3})"
 
   mxpy --verbose contract call ${ADDRESS} \
@@ -162,7 +164,7 @@ whitelistParticipants() {
     --pem=${SPACE_OWNER} \
     --gas-limit=15000000 \
     --function "whitelistParticipants" \
-    --arguments $1 $address \
+    --arguments $sft_token $2 $address \
     --proxy ${PROXY} \
     --chain ${CHAIN_ID} \
     --send || return
