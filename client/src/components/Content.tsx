@@ -9,11 +9,12 @@ import ReputationGiver from "./ReputationGiver";
 import ReputationNamespace from "./ReputationNamespace";
 import ReputationRoles from "./ReputationRoles";
 import { Claims } from "./Claims";
+import CampaignDetail from "./CampaignDetail";
 
 export const Content = () => {
   return (
-    <div className="flex justify-center grow bg-slate-100 shadow-lg">
-      <Box className="w-10/12 bg-slate-100 shadow-lg">
+    <div className="flex justify-center grow shadow-lg">
+      <Box className="w-10/12 shadow-lg shadow-itheum-dark">
         <Routes>
           <Route index path="" element={<Home />} />
           <Route path="collector" element={<Claims />} />
@@ -24,6 +25,7 @@ export const Content = () => {
 
           <Route path="about" element={<About />} />
           <Route path="space" element={<Space />} />
+          <Route path="space/detail" element={<CampaignDetail />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Box>

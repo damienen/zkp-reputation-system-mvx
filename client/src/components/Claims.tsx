@@ -65,7 +65,7 @@ export const Claims = () => {
     Contract.getClaims(address).then((space: any) => {
       console.log("Test", space);
       if (space) {
-        setCampaign(space?.data.campaigns);
+        setCampaign(space?.data?.campaigns);
       } else {
         return;
       }

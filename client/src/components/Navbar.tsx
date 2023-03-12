@@ -11,7 +11,7 @@ export const Navbar = () => {
   const wallet = address?.length;
 
   return (
-    <div className="flex w-full h-14 bg-teal-300 flex-row justify-between">
+    <div className="flex w-full h-14 bg-teal-300 flex-row justify-between shadow-lg">
       <div className="flex flex-col ml-10 text-center justify-center">
         <Text className="text-sm font-bold">Durin</Text>
         <Text className="text-sm font-bold">Your First MultiversX NFT Reputation System</Text>

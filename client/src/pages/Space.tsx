@@ -23,6 +23,7 @@ import React, { useEffect, useState } from "react";
 import { Contract } from "../sdk/contract.sdk";
 import { Campaign } from "../util/types";
 import { buildNftId } from "../util/functions";
+import { NavLink } from "react-router-dom";
 
 export const Space = () => {
   const { address } = useGetAccountInfo();
@@ -121,9 +122,12 @@ export const Space = () => {
                 Minted supply / Max supply: {campaigns.mintedSupply} / {campaigns.maxSupply}
               </Text>
               <Text className="mb-2">Has whitelist enabled: {campaigns.requireWhitelist ? "Yes" : "No"}</Text>
+              <NavLink to={"detail"} className="!bg-teal-300 hover:!bg-teal-400 hover:scale-105 my-2 text-center px-4 py-2 rounded-lg font-medium">
+                Detail
+              </NavLink>
             </Box>
           );
-        })}
+        })};
       </div>
         :
         <div className="flex w-full h-[75dvh] justify-center items-center">
