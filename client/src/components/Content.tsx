@@ -8,6 +8,7 @@ import Space from "../pages/Space";
 import ReputationGiver from "./ReputationGiver";
 import ReputationNamespace from "./ReputationNamespace";
 import ReputationRoles from "./ReputationRoles";
+import { Claims } from "./Claims";
 
 export const Content = () => {
   return (
@@ -15,9 +16,11 @@ export const Content = () => {
       <Box className="w-10/12 bg-slate-100 shadow-lg">
         <Routes>
           <Route index path="" element={<Home />} />
+          <Route path="collector" element={<Claims />} />
           <Route path="reputation" element={<ReputationGiver />} />
           <Route path="reputation/roles" element={<ReputationRoles />} />
           <Route path="reputation/roles/namespace" element={<ReputationNamespace />} />
+
 
           <Route path="about" element={<About />} />
           <Route path="space" element={<Space />} />
