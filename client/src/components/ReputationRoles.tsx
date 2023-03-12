@@ -11,8 +11,10 @@ export const ReputationRoles = () => {
   const { hasPendingTransactions } = useGetPendingTransactions();
 
   useEffect(() => {
+    if (address) {
       MultiversXApi.getLastCollectionCreated(address)
         .then(data => setTick(data.data.ticker));
+    }
   }, [hasPendingTransactions]);
 
   return (

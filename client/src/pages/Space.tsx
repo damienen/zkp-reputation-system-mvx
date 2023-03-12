@@ -123,11 +123,11 @@ export const Space = () => {
               </Text>
               <Text className="mb-2">Has whitelist enabled: {campaigns.requireWhitelist ? "Yes" : "No"}</Text>
               <NavLink to={"detail"} className="!bg-teal-300 hover:!bg-teal-400 hover:scale-105 my-2 text-center px-4 py-2 rounded-lg font-medium">
-                Detail
+                <Button border={"2px"}>Detail</Button>
               </NavLink>
             </Box>
           );
-        })};
+        })}
       </div>
         :
         <div className="flex w-full h-[75dvh] justify-center items-center">
