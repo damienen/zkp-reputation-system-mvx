@@ -9,6 +9,7 @@ import ReputationGiver from "./ReputationGiver";
 import ReputationNamespace from "./ReputationNamespace";
 import ReputationRoles from "./ReputationRoles";
 import { Claims } from "./Claims";
+import CampaignDetail from "./CampaignDetail";
 
 export const Content = () => {
   return (
@@ -24,6 +25,7 @@ export const Content = () => {
 
           <Route path="about" element={<About />} />
           <Route path="space" element={<Space />} />
+          <Route path="space/detail" element={<CampaignDetail />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Box>
