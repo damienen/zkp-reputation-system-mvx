@@ -15,18 +15,37 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useGetAccountInfo } from "@multiversx/sdk-dapp/hooks";
+import { Address, BigUIntValue, BooleanValue, ContractFunction, StringValue, Transaction, TransactionPayload } from "@multiversx/sdk-core/out";
+import { useGetAccountInfo, useGetPendingTransactions } from "@multiversx/sdk-dapp/hooks";
+import { sendTransactions } from "@multiversx/sdk-dapp/services";
+import { refreshAccount } from "@multiversx/sdk-dapp/utils";
 import React, { useEffect, useState } from "react";
 import { Contract } from "sdk/contract.sdk";
 import { Campaign } from "../util/types";
 
 export const Space = () => {
   const { address } = useGetAccountInfo();
-  const [ceva, setCeva] = useState<Campaign[]>([]);
+  const [campaign, setCampaign] = useState<Campaign[]>([]);
   const [spaceId, setSpaceId] = useState("");
-  const [nftImage, setNftImage] = useState("");
+  // const [nftImage, setNftImage] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [checkedItems, setCheckedItems] = useState(true);
+  const { hasPendingTransactions } = useGetPendingTransactions();
+
+  // FORM
+
+  const [name, setName] = React.useState("");
+  const handleNameChange = (event: any) => setName(event.target.value);
+  const [media, setMedia] = React.useState("");
+  const handleMediaChange = (event: any) => setMedia(event.target.value);
+  const [attributes, setAttributes] = React.useState("");
+  const handleAttributesChange = (event: any) => setAttributes(event.target.value);
+  const [claimAmount, setClaimAmount] = React.useState(0);
+  const handleClaimAmount = (event: any) => setClaimAmount(event.target.value);
+  const [automated, setAutomated] = React.useState(1);
+  const handleAutomated = (event: any) => setAutomated(event.target.value);
+  const [requireWhitelist, setRequireWhitelist] = React.useState(1);
+  const handleRequireWhitelist = (event: any) => setRequireWhitelist(event.target.value);
 
   const buildNftId = (collectionId: string, nonce: number) => {
     let hexnonce = nonce?.toString(16);
@@ -36,16 +55,47 @@ export const Space = () => {
     return collectionId + "-" + hexnonce;
   };
 
+  const addCampaign = async (name: string, media: string, metadata: string, claimAmount: number, automated: boolean, requireWhitelist: boolean) => {
+    const pingTransaction = new Transaction({
+      value: 0,
+      data: TransactionPayload.contractCall()
+        .setFunction(new ContractFunction("createCampaign"))
+        .addArg(new StringValue(`${name}`))
+        .addArg(new StringValue(`${media}`))
+        .addArg(new StringValue(`${metadata}`))
+        .addArg(new BigUIntValue(claimAmount))
+        .addArg(new BooleanValue(automated))
+        .addArg(new BooleanValue(requireWhitelist))
+        .build(),
+      sender: new Address(address),
+      receiver: new Address("erd1qqqqqqqqqqqqqpgq3yf3vgw7d3avzmvpg9evfjj6pzrezgtxuyksn62mwg"),
+      gasLimit: 25000000,
+      chainID: "D",
+    });
+    await refreshAccount();
+
+    await sendTransactions({
+      transactions: pingTransaction,
+      transactionsDisplayInfo: {
+        processingMessage: "Processing place bet transaction",
+        errorMessage: "An error has occured during Ping",
+        successMessage: "Ping transaction successful",
+      },
+      redirectAfterSign: false,
+    });
+  };
   useEffect(() => {
     Contract.getSpace(address).then((space: any) => {
       console.log("Test", space);
       if (space) {
-        setCeva(space.data.campaigns);
+        setCampaign(space.data.campaigns);
         setSpaceId(space.data.spaceId);
-        setNftImage(buildNftId(space.data.spaceId, space.data.campaigns.nonce));
+        // setNftImage(buildNftId(space.data.spaceId, space.data.campaigns.nonce));
+        console.log("Nonce", campaign.length);
       }
     });
-  }, [address]);
+    console.log(hasPendingTransactions);
+  }, [address, hasPendingTransactions]);
 
   return (
     <div className="flex flex-col w-full">
@@ -62,24 +112,26 @@ export const Space = () => {
           </Button>
         </div>
       </div>
-      {ceva.map((campaigns, index) => {
-        return (
-          <div className="grid lg:grid-cols-2 xl:grid-cols-3" key={index}>
-            <Box className="flex flex-col border-2 border-teal-300 w-fit px-4 ml-10 mt-2 rounded-lg">
+
+      <div className="grid lg:grid-cols-2 xl:grid-cols-3">
+        {campaign.map((campaigns, index) => {
+          const nftId = buildNftId(campaigns.spaceId, campaigns.nonce);
+          return (
+            <Box className="flex flex-col border-2 border-teal-300 w-fit px-4 ml-10 mt-2 rounded-lg" key={index}>
               <Box boxSize="2xs">
-                <Image src={`https://api.multiversx.com/nfts/${nftImage}/thumbnail`} alt="nft" />
+                <Image src={`https://devnet-api.multiversx.com/nfts/${nftId}/thumbnail`} alt="nft" />
               </Box>
               <Text>Campaign name: {campaigns.name}</Text>
               <Text>Space ID: {campaigns.spaceId}</Text>
-              <Text>Max supply: {campaigns.maxSupply}</Text>
+              <Text>Claimable amount: {campaigns.claimAmount}</Text>
               <Text>
-                Minted supply: {campaigns.mintedSupply} / {campaigns.maxSupply}
+                Minted supply / Max supply: {campaigns.mintedSupply} / {campaigns.maxSupply}
               </Text>
-              <Text className="mb-2">Has whitelist enabled: {campaigns.requireWhitelist ? "true" : ""}</Text>
+              <Text className="mb-2">Has whitelist enabled: {campaigns.requireWhitelist ? "Yes" : "No"}</Text>
             </Box>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -94,14 +146,22 @@ export const Space = () => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody className="flex flex-col">
-            <Input className="my-2" placeholder="Name" />
-            <Input className="my-2" placeholder="Image URL" />
-            <Input className="my-2" placeholder="Attributes" />
-            <Input className="my-2" placeholder="Claim amount per user" />
-            <Checkbox className="my-2 ml-0.5" defaultChecked onChange={(e) => setCheckedItems(e.target.checked)}>
+            <Input className="my-2" placeholder="Name" value={name} onChange={handleNameChange} />
+            <Input className="my-2" placeholder="Image URL" value={media} onChange={handleMediaChange} />
+            <Input className="my-2" placeholder="Attributes" value={attributes} onChange={handleAttributesChange} />
+            <Input className="my-2" placeholder="Claim amount per user" value={claimAmount} onChange={handleClaimAmount} />
+            <Checkbox
+              className="my-2 ml-0.5"
+              value={automated}
+              defaultChecked
+              onChange={(e) => {
+                setCheckedItems(e.target.checked);
+                handleAutomated;
+              }}>
+              {" "}
               Redeem via KYC?
             </Checkbox>
-            <Checkbox className="my-2 ml-0.5" defaultChecked isDisabled={checkedItems}>
+            <Checkbox className="my-2 ml-0.5" value={requireWhitelist} defaultChecked isDisabled={checkedItems} onChange={handleRequireWhitelist}>
               Campaign require whitelist?
             </Checkbox>
           </ModalBody>
@@ -109,7 +169,9 @@ export const Space = () => {
             <Button mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button className="!bg-teal-300">Create</Button>
+            <Button className="!bg-teal-300" onClick={() => addCampaign(name, media, attributes, claimAmount, !!automated, !!requireWhitelist)}>
+              Create
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
