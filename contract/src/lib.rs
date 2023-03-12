@@ -180,6 +180,35 @@ pub trait Reputation:
         self.campaigns(&token_identifier).insert(nonce, campaign);
     }
 
+    #[endpoint(addKycKey)]
+    fn add_kyc_key(&self, token_identifier: TokenIdentifier, nonce: u64, key: ManagedBuffer) {
+        let caller = self.blockchain().get_caller();
+        let mut addresses = MultiValueEncoded::new();
+        addresses.push(caller.clone());
+        if self.kyc_backend_keys().contains(&key) {
+            self.whitelist_participants(token_identifier, nonce, addresses);
+            self.kyc_backend_keys().swap_remove(&key);
+        } else {
+            self.kyc_address_keys().insert(key.clone(), caller);
+            self.kyc_token_keys().insert(key.clone(), token_identifier);
+            self.kyc_nonce_keys().insert(key, nonce);
+        }
+    }
+
+    #[endpoint(checkKycKey)]
+    fn check_kyc_key(&self, key: ManagedBuffer) {
+        let user = self.kyc_address_keys().get(&key).unwrap_or_default();
+        let mut addresses = MultiValueEncoded::new();
+        addresses.push(user.clone());
+        if user.is_zero() {
+            self.kyc_backend_keys().insert(key);
+        } else {
+            let token_identifier = self.kyc_token_keys().get(&key).unwrap();
+            let nonce = self.kyc_nonce_keys().get(&key).unwrap();
+            self.whitelist_participants(token_identifier, nonce, addresses);
+        }
+    }
+
     #[endpoint(whitelistParticipants)]
     fn whitelist_participants(
         &self,

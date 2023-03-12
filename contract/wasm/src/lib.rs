@@ -5,9 +5,9 @@
 ////////////////////////////////////////////////////
 
 // Init:                                 1
-// Endpoints:                           20
+// Endpoints:                           22
 // Async Callback (empty):               1
-// Total number of exported functions:  22
+// Total number of exported functions:  24
 
 #![no_std]
 #![feature(alloc_error_handler, lang_items)]
@@ -21,6 +21,8 @@ multiversx_sc_wasm_adapter::endpoints! {
         createSpace
         createCampaign
         claim
+        addKycKey
+        checkKycKey
         whitelistParticipants
         delistParticipants
         pauseSpace
