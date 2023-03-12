@@ -62,7 +62,7 @@ export class BackendAccount {
     return txHash;
   }
 
-  async sendxPortalNotification(password: string) {
+  async sendxPortalNotification(receiver: Address, password: string) {
     let backend = await this.sync(password);
     let networkConfig = await this.devnetNetworkProvider.getNetworkConfig();
 
@@ -73,7 +73,7 @@ export class BackendAccount {
     const notificationTransaction = new Transaction({
       value: 0,
       data: transactionPayload,
-      receiver: new Address(reputationContractAddress),
+      receiver: receiver,
       sender: new Address(backend.address.bech32()),
       gasLimit: 30000000,
       chainID: networkConfig.ChainID,

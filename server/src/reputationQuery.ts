@@ -154,7 +154,7 @@ export class Contract {
       const returnValue = firstValueAsStruct.valueOf();
       console.log(returnValue);
       return {
-        dadta: returnValue,
+        data: returnValue,
       };
     } else {
       return { data: {} };
