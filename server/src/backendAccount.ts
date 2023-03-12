@@ -56,5 +56,6 @@ export class BackendAccount {
       checkKycTransaction
     );
     console.log(`Tx Hash: ${txHash}`);
+    return txHash;
   }
 }

@@ -1,15 +1,19 @@
 import { BackendAccount } from "./backendAccount";
 import { walletPassword } from "./constants";
 export class KycWebhook {
-  kycWebhook(request: any) {
+  async kycWebhook(request: any) {
     if (request.type === "POST") {
       const key = request.body.key;
       const password = walletPassword;
       const backend = new BackendAccount();
+      let message = "";
       if (password && request.body.status === "approved") {
-        backend.checkKycKey(key, password);
+        message = await backend.checkKycKey(key, password);
       }
       return {
+        body: {
+          message: message,
+        },
         statusCode: "200",
         statusDescription: "Ok",
       };
