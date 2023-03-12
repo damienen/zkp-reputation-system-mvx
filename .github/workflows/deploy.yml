@@ -66,7 +66,7 @@ jobs:
         run: |
           touch .env
           echo REACT_APP_WALLETCONNECTV2_KEY=${{ secrets.REACT_APP_WALLETCONNECTV2_KEY }} >> .env
-          echo REACT_APP_PASSBASE_KEY=${{ secrets.REACT_APP_REACT_APP_PASSBASE_KEY }} >> .env
+          echo REACT_APP_PASSBASE_KEY=${{ secrets.REACT_APP_PASSBASE_KEY }} >> .env
 
       - name: Build the frontend code
         working-directory: ./client
