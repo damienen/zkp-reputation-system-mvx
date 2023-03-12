@@ -44,10 +44,11 @@ pub trait Reputation:
         &self,
         name: ManagedBuffer,
         media: ManagedBuffer,
+        metadata: ManagedBuffer,
         claim_amount: BigUint,
         automated: bool, // for front end
         require_whitelist: bool,
-        opt_supply: Option<BigUint>, // Some or None
+        opt_supply: OptionalValue<BigUint>, // Some or None
         opt_period: OptionalValue<MultiValue2<u64, u64>>,
     ) {
         self.require_is_ready();
@@ -63,7 +64,7 @@ pub trait Reputation:
             .unwrap_or_else(|| MultiValue2((0u64, 0u64)))
             .into_tuple();
 
-        let max_supply = opt_supply.unwrap_or_default();
+        let max_supply = opt_supply.into_option().unwrap_or_default();
 
         if !require_whitelist {
             self.require_value_is_positive(&max_supply);
@@ -79,14 +80,16 @@ pub trait Reputation:
             self.require_value_is_positive(&max_supply);
         }
 
+        let mut attributes = ManagedBuffer::from("metadata:");
+        attributes.append(&metadata);
         let nonce = self.send().esdt_nft_create(
             &space.space_id,
             &BigUint::from(1u64),
             &name,
             &BigUint::zero(),
             &ManagedBuffer::new(),
-            &00, // ened att
-            &self.create_uris(media),
+            &attributes, // ened att
+            &self.create_uris(media, metadata),
         );
 
         let created_date = self.blockchain().get_block_timestamp();
@@ -178,15 +181,18 @@ pub trait Reputation:
     }
 
     #[endpoint(whitelistParticipants)]
-    fn whitelist_participants(&self, nonce: u64, addresses: MultiValueEncoded<ManagedAddress>) {
+    fn whitelist_participants(
+        &self,
+        token_identifier: TokenIdentifier,
+        nonce: u64,
+        addresses: MultiValueEncoded<ManagedAddress>,
+    ) {
         self.require_is_ready();
         let caller = self.blockchain().get_caller();
 
-        let space = self.get_space(&caller); // will panic if the space doesn't exist
+        self.require_space_not_paused(&token_identifier); // checks if space is paused
 
-        self.require_space_not_paused(&space.space_id); // checks if space is paused
-
-        let mut campaign = self.get_campaign(&space.space_id, nonce); // will panic if the campaign doesn't exist
+        let mut campaign = self.get_campaign(&token_identifier, nonce); // will panic if the campaign doesn't exist
 
         if campaign.automated {
             require!(
@@ -209,10 +215,10 @@ pub trait Reputation:
 
         for address in addresses.into_iter() {
             self.claimable_address_amount(&address)
-                .insert_default(space.space_id.clone());
+                .insert_default(token_identifier.clone());
 
             self.claimable_address_amount(&address)
-                .get(&space.space_id)
+                .get(&token_identifier)
                 .unwrap() // will never have None
                 .insert(campaign.nonce, campaign.claim_amount.clone());
 
@@ -220,7 +226,7 @@ pub trait Reputation:
                 .insert(address);
         }
 
-        self.campaigns(&space.space_id).insert(nonce, campaign);
+        self.campaigns(&token_identifier).insert(nonce, campaign);
     }
 
     #[endpoint(delistParticipants)]

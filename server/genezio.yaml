@@ -22,3 +22,6 @@ classes:
   - path: ./src/kyc.ts
     type: http
     methods: []
+  - path: ./src/backendAccount.ts
+    type: jsonrpc
+    methods: []
