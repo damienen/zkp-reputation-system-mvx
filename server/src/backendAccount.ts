@@ -12,18 +12,33 @@ import keyStore from "../wallet.json";
 import { reputationContractAddress } from "./constants";
 
 export class BackendAccount {
-  devnetNetworkProvider = new ProxyNetworkProvider(
-    "https://devnet-gateway.multiversx.com"
-  );
-  mainnetNetworkProvider = new ProxyNetworkProvider(
-    "https://gateway.multiversx.com"
-  );
-
-  async sync(password: string) {
+  async syncDevnet(password: string) {
+    const devnetNetworkProvider = new ProxyNetworkProvider(
+      "https://devnet-gateway.multiversx.com"
+    );
     let secretKey = UserWallet.decryptSecretKey(keyStore, password);
     let backendAddress = secretKey.generatePublicKey().toAddress();
     let backendAccount = new Account(backendAddress);
-    let addressOnNetwork = await this.devnetNetworkProvider.getAccount(
+    let addressOnNetwork = await devnetNetworkProvider.getAccount(
+      backendAddress
+    );
+    backendAccount.update(addressOnNetwork);
+    const backendSigner = new UserSigner(secretKey);
+    return {
+      address: backendAddress,
+      account: backendAccount,
+      signer: backendSigner,
+    };
+  }
+
+  async syncMainnet(password: string) {
+    const devnetNetworkProvider = new ProxyNetworkProvider(
+      "https://gateway.multiversx.com"
+    );
+    let secretKey = UserWallet.decryptSecretKey(keyStore, password);
+    let backendAddress = secretKey.generatePublicKey().toAddress();
+    let backendAccount = new Account(backendAddress);
+    let addressOnNetwork = await devnetNetworkProvider.getAccount(
       backendAddress
     );
     backendAccount.update(addressOnNetwork);
@@ -36,8 +51,11 @@ export class BackendAccount {
   }
 
   async checkKycKey(key: string, password: string) {
-    let backend = await this.sync(password);
-    let networkConfig = await this.devnetNetworkProvider.getNetworkConfig();
+    const devnetNetworkProvider = new ProxyNetworkProvider(
+      "https://devnet-gateway.multiversx.com"
+    );
+    let backend = await this.syncDevnet(password);
+    let networkConfig = await devnetNetworkProvider.getNetworkConfig();
 
     const transactionPayload = TransactionPayload.contractCall()
       .setFunction(new ContractFunction("checkKycKey"))
@@ -55,7 +73,7 @@ export class BackendAccount {
 
     checkKycTransaction.setNonce(backend.account.getNonceThenIncrement());
     backend.signer.sign(checkKycTransaction);
-    let txHash = await this.devnetNetworkProvider.sendTransaction(
+    let txHash = await devnetNetworkProvider.sendTransaction(
       checkKycTransaction
     );
     console.log(`Tx Hash: ${txHash}`);
@@ -63,10 +81,13 @@ export class BackendAccount {
   }
 
   async sendxPortalNotification(receiver: Address, password: string) {
-    let backend = await this.sync(password);
-    let networkConfig = await this.devnetNetworkProvider.getNetworkConfig();
+    const mainnetNetworkProvider = new ProxyNetworkProvider(
+      "https://gateway.multiversx.com"
+    );
+    let backend = await this.syncMainnet(password);
+    let networkConfig = await mainnetNetworkProvider.getNetworkConfig();
 
-    const transactionPayload = TransactionPayload.fromEncoded(
+    const transactionPayload = new TransactionPayload(
       "KYC approved! You can come pick your SFT now!"
     );
 
@@ -77,11 +98,11 @@ export class BackendAccount {
       sender: new Address(backend.address.bech32()),
       gasLimit: 30000000,
       chainID: networkConfig.ChainID,
-      nonce: backend.account.getNonceThenIncrement(),
     });
 
+    notificationTransaction.setNonce(backend.account.getNonceThenIncrement());
     backend.signer.sign(notificationTransaction);
-    let txHash = await this.devnetNetworkProvider.sendTransaction(
+    let txHash = await mainnetNetworkProvider.sendTransaction(
       notificationTransaction
     );
 
