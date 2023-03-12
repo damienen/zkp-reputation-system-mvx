@@ -16,3 +16,8 @@ export type Campaign = {
   requireWhitelist: boolean;
   automated: boolean;
 };
+
+export type ClaimCampaign = {
+  spaceId: string;
+  nonce: number;
+}

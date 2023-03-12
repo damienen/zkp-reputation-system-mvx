@@ -32,8 +32,8 @@ export const Navbar = () => {
   return (
     <div className="flex-none w-full h-14 grid grid-cols-3 py-1.5 bg-teal-300">
       <div className="flex flex-col ml-20">
-        <Text className="text-sm">Reputation</Text>
-        <Text className="text-base">Client</Text>
+        <Text className="text-sm font-bold">Reputation</Text>
+        <Text className="text-base font-extrabold">Client</Text>
       </div>
       <div className="flex flex-row items-center justify-center">
         {navigationItems.map((items, index) => {

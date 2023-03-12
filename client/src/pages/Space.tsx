@@ -22,12 +22,12 @@ import { refreshAccount } from "@multiversx/sdk-dapp/utils";
 import React, { useEffect, useState } from "react";
 import { Contract } from "sdk/contract.sdk";
 import { Campaign } from "../util/types";
+import { buildNftId } from "../util/functions";
 
 export const Space = () => {
   const { address } = useGetAccountInfo();
   const [campaign, setCampaign] = useState<Campaign[]>([]);
   const [spaceId, setSpaceId] = useState("");
-  // const [nftImage, setNftImage] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [checkedItems, setCheckedItems] = useState(true);
   const { hasPendingTransactions } = useGetPendingTransactions();
@@ -47,13 +47,6 @@ export const Space = () => {
   const [requireWhitelist, setRequireWhitelist] = React.useState(1);
   const handleRequireWhitelist = (event: any) => setRequireWhitelist(event.target.value);
 
-  const buildNftId = (collectionId: string, nonce: number) => {
-    let hexnonce = nonce?.toString(16);
-    if (hexnonce?.length % 2 !== 0) {
-      hexnonce = "0" + hexnonce;
-    }
-    return collectionId + "-" + hexnonce;
-  };
 
   const addCampaign = async (name: string, media: string, metadata: string, claimAmount: number, automated: boolean, requireWhitelist: boolean) => {
     const pingTransaction = new Transaction({
@@ -77,21 +70,21 @@ export const Space = () => {
     await sendTransactions({
       transactions: pingTransaction,
       transactionsDisplayInfo: {
-        processingMessage: "Processing place bet transaction",
-        errorMessage: "An error has occured during Ping",
-        successMessage: "Ping transaction successful",
+        processingMessage: "Adding campaign",
+        errorMessage: "Campaign add error",
+        successMessage: "Campaign added successfully",
       },
       redirectAfterSign: false,
     });
   };
   useEffect(() => {
     Contract.getSpace(address).then((space: any) => {
-      console.log("Test", space);
+      // console.log("Test", space);
       if (space) {
-        setCampaign(space.data.campaigns);
-        setSpaceId(space.data.spaceId);
+        setCampaign(space?.data?.campaigns);
+        setSpaceId(space?.data?.spaceId);
         // setNftImage(buildNftId(space.data.spaceId, space.data.campaigns.nonce));
-        console.log("Nonce", campaign.length);
+        // console.log("Nonce", space);
       }
     });
     console.log(hasPendingTransactions);
@@ -112,13 +105,13 @@ export const Space = () => {
           </Button>
         </div>
       </div>
-
+      {(campaign && campaign.length > 0) ?
       <div className="grid lg:grid-cols-2 xl:grid-cols-3">
-        {campaign.map((campaigns, index) => {
+        {campaign?.map((campaigns, index) => {
           const nftId = buildNftId(campaigns.spaceId, campaigns.nonce);
           return (
             <Box className="flex flex-col border-2 border-teal-300 w-fit px-4 ml-10 mt-2 rounded-lg" key={index}>
-              <Box boxSize="2xs">
+              <Box boxSize="2xs" className="my-1.5">
                 <Image src={`https://devnet-api.multiversx.com/nfts/${nftId}/thumbnail`} alt="nft" />
               </Box>
               <Text>Campaign name: {campaigns.name}</Text>
@@ -132,7 +125,11 @@ export const Space = () => {
           );
         })}
       </div>
-
+        :
+        <div className="flex w-full h-[75dvh] justify-center items-center">
+        No campaign at the moment you can create one!
+        </div>
+      }
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
