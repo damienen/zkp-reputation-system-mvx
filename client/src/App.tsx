@@ -15,7 +15,7 @@ function App() {
         customNetworkConfig={{
           name: "customConfig",
           apiTimeout: 6000,
-          walletConnectV2ProjectId: "a5a07b89bf08093c43938c81a8f1a937",
+          walletConnectV2ProjectId: process.env.REACT_APP_WALLETCONNECTV2_KEY,
         }}>
         <TransactionsToastList />
         <NotificationModal />
