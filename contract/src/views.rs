@@ -126,4 +126,11 @@ pub trait ViewsModule: storage::StorageModule + common_utils::CommonUtilsModule 
         };
         kyc
     }
+
+    #[view(getKycNotification)]
+    fn get_kyc_notification(&self, key: ManagedBuffer) -> ManagedAddress {
+        let address = self.kyc_address_keys().get(&key).unwrap_or_default();
+
+        address
+    }
 }
