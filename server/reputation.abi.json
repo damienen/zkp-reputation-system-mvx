@@ -2,10 +2,10 @@
     "buildInfo": {
         "rustc": {
             "version": "1.69.0-nightly",
-            "commitHash": "11d96b59307b1702fffe871bfc2d0145d070881e",
-            "commitDate": "2023-02-01",
+            "commitHash": "75a0be98f25a4b9de5afa0e15eb016e7f9627032",
+            "commitDate": "2023-02-05",
             "channel": "Nightly",
-            "short": "rustc 1.69.0-nightly (11d96b593 2023-02-01)"
+            "short": "rustc 1.69.0-nightly (75a0be98f 2023-02-05)"
         },
         "contractCrate": {
             "name": "reputation",
@@ -53,6 +53,10 @@
                     "type": "bytes"
                 },
                 {
+                    "name": "metadata",
+                    "type": "bytes"
+                },
+                {
                     "name": "claim_amount",
                     "type": "BigUint"
                 },
@@ -66,7 +70,8 @@
                 },
                 {
                     "name": "opt_supply",
-                    "type": "Option<BigUint>"
+                    "type": "optional<BigUint>",
+                    "multi_arg": true
                 },
                 {
                     "name": "opt_period",
@@ -92,9 +97,43 @@
             "outputs": []
         },
         {
+            "name": "addKycKey",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "token_identifier",
+                    "type": "TokenIdentifier"
+                },
+                {
+                    "name": "nonce",
+                    "type": "u64"
+                },
+                {
+                    "name": "key",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "checkKycKey",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "key",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
             "name": "whitelistParticipants",
             "mutability": "mutable",
             "inputs": [
+                {
+                    "name": "token_identifier",
+                    "type": "TokenIdentifier"
+                },
                 {
                     "name": "nonce",
                     "type": "u64"
@@ -319,6 +358,21 @@
             "outputs": [
                 {
                     "type": "UserView"
+                }
+            ]
+        },
+        {
+            "name": "getKycNotification",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "key",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "Address"
                 }
             ]
         }

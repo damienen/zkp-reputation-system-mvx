@@ -5,6 +5,7 @@ import {
   ResultsParser,
   SmartContract,
   SmartContractAbi,
+  StringValue,
   TokenIdentifierValue,
   U64Value,
   VariadicValue,
@@ -72,32 +73,38 @@ export class Contract {
     }
   }
 
-  async getClaims(address: string){
+  async getClaims(address: string) {
     const interaction = this.contract.methodsExplicit.viewClaims([
       new AddressValue(new Address(address)),
-      ]);
-      const query = interaction.buildQuery();
-      const queryResponse = await this.networkProvider.queryContract(query);
-      const endpointDefinition = interaction.getEndpoint();
-      const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
-        queryResponse,
-        endpointDefinition
-      );
-      if (returnCode.isSuccess()) {
-        let firstValueAsStruct = firstValue as VariadicValue;
-        const returnValue = firstValueAsStruct.valueOf();
-        console.log(returnValue);
-        return returnValue.map((claim: any) => {
-          return {
+    ]);
+    const query = interaction.buildQuery();
+    const queryResponse = await this.networkProvider.queryContract(query);
+    const endpointDefinition = interaction.getEndpoint();
+    const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
+      queryResponse,
+      endpointDefinition
+    );
+    if (returnCode.isSuccess()) {
+      let firstValueAsStruct = firstValue as VariadicValue;
+      const returnValue = firstValueAsStruct.valueOf();
+      console.log(returnValue);
+      return returnValue.map((claim: any) => {
+        return {
+          data: {
             campaign: this.mapCampaign(claim["campaign"]),
             amount: claim["amount"].toNumber(),
-          };
-        });
-      }else{
-        return {data: {}};
-      }
+          },
+        };
+      });
+    } else {
+      return { data: {} };
+    }
   }
-  async getIndividualCampaign(tokenIdentifier: string, nonce: number, address: string){
+  async getIndividualCampaign(
+    tokenIdentifier: string,
+    nonce: number,
+    address: string
+  ) {
     const interaction = this.contract.methodsExplicit.getIndividualCampaign([
       new TokenIdentifierValue(tokenIdentifier),
       new U64Value(nonce),
@@ -123,8 +130,32 @@ export class Contract {
           claimed: !!returnValue["claimed"],
         },
       };
-    }else{
-      return {data: {}};
+    } else {
+      return { data: {} };
     }
-}
+  }
+
+  async getKycNotification(key: string) {
+    const interaction = this.contract.methodsExplicit.getKycNotification([
+      new StringValue(key),
+    ]);
+    const query = interaction.buildQuery();
+    const queryResponse = await this.networkProvider.queryContract(query);
+    const endpointDefinition = interaction.getEndpoint();
+    const { firstValue, returnCode } = new ResultsParser().parseQueryResponse(
+      queryResponse,
+      endpointDefinition
+    );
+
+    if (returnCode.isSuccess()) {
+      let firstValueAsStruct = firstValue as AddressValue;
+      const returnValue = firstValueAsStruct.valueOf();
+      console.log(returnValue);
+      return {
+        dadta: returnValue,
+      };
+    } else {
+      return { data: {} };
+    }
+  }
 }

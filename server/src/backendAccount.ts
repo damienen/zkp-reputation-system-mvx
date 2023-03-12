@@ -84,7 +84,7 @@ export class BackendAccount {
     let txHash = await this.devnetNetworkProvider.sendTransaction(
       notificationTransaction
     );
-    console.log(`Tx Hash: ${txHash}`);
+
     return txHash;
   }
 }

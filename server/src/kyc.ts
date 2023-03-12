@@ -8,7 +8,7 @@ export class KycWebhook {
       const backend = new BackendAccount();
       let message = "";
       if (password && request.body.status === "approved") {
-        message = await backend.sendxPortalNotification(key, password);
+        message = await backend.checkKycKey(key, password);
       }
       return {
         body: {
