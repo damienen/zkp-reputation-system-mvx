@@ -83,4 +83,7 @@ pub trait StorageModule {
     #[view(getAdministrator)]
     #[storage_mapper("administrator")]
     fn administrator(&self) -> SingleValueMapper<ManagedAddress>;
+
+    #[storage_mapper("kyc_check")]
+    fn check_kyc(&self) -> BiDiMapper<ManagedAddress, ManagedBuffer>;
 }
