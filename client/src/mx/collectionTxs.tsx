@@ -2,7 +2,7 @@ import { Address, AddressValue, ContractFunction, StringValue, TokenIdentifierVa
 import { sendTransactions } from "@multiversx/sdk-dapp/services";
 import { refreshAccount } from "@multiversx/sdk-dapp/utils";
 
-export const sendIssueCollectionTransaction = async (sender: Address, name: string, ticker: string) => {
+export const sendIssueCollectionTransaction = async (sender: string, name: string, ticker: string) => {
   const issueCollectionTx = new Transaction({
     value: 50000000000000000,
     data: TransactionPayload.contractCall()
@@ -24,7 +24,7 @@ export const sendIssueCollectionTransaction = async (sender: Address, name: stri
       .addArg(new StringValue("canAddSpecialRoles"))
       .addArg(new StringValue("true"))
       .build(),
-    sender: sender,
+    sender: new Address(sender),
     receiver: new Address("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
     gasLimit: 80000000,
     chainID: "D",
@@ -42,7 +42,7 @@ export const sendIssueCollectionTransaction = async (sender: Address, name: stri
   });
 };
 
-export const sendSetSpecialRoleTransaction = async (sender: Address, ticker: string) => {
+export const sendSetSpecialRoleTransaction = async (sender: string, ticker: string) => {
   const specialRoleTx = new Transaction({
     value: 0,
     data: TransactionPayload.contractCall()
@@ -51,8 +51,10 @@ export const sendSetSpecialRoleTransaction = async (sender: Address, ticker: str
       .addArg(new AddressValue(new Address("erd1qqqqqqqqqqqqqpgq3yf3vgw7d3avzmvpg9evfjj6pzrezgtxuyksn62mwg")))
       .addArg(new StringValue("ESDTRoleNFTCreate"))
       .addArg(new StringValue("ESDTRoleNFTAddQuantity"))
+      .addArg(new StringValue("ESDTTransferRole"))
+      .addArg(new StringValue("ESDTRoleNFTBurn"))
       .build(),
-    sender: sender,
+    sender: new Address(sender),
     receiver: new Address("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
     gasLimit: 80000000,
     chainID: "D",
@@ -70,7 +72,7 @@ export const sendSetSpecialRoleTransaction = async (sender: Address, ticker: str
   });
 };
 
-export const createSpaceTransaction = async (sender: Address, ticker: string, name: string) => {
+export const createSpaceTransaction = async (sender: string, ticker: string, name: string) => {
   const createSpaceTx = new Transaction({
     value: 0,
     data: TransactionPayload.contractCall()
@@ -78,7 +80,7 @@ export const createSpaceTransaction = async (sender: Address, ticker: string, na
       .addArg(new TokenIdentifierValue(`${ticker}`))
       .addArg(new StringValue(name))
       .build(),
-    sender: sender,
+    sender: new Address(sender),
     receiver: new Address("erd1qqqqqqqqqqqqqpgq3yf3vgw7d3avzmvpg9evfjj6pzrezgtxuyksn62mwg"),
     gasLimit: 12000000,
     chainID: "D",

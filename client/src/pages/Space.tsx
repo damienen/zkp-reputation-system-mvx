@@ -20,7 +20,7 @@ import { useGetAccountInfo, useGetPendingTransactions } from "@multiversx/sdk-da
 import { sendTransactions } from "@multiversx/sdk-dapp/services";
 import { refreshAccount } from "@multiversx/sdk-dapp/utils";
 import React, { useEffect, useState } from "react";
-import { Contract } from "sdk/contract.sdk";
+import { Contract } from "../sdk/contract.sdk";
 import { Campaign } from "../util/types";
 import { buildNftId } from "../util/functions";
 
@@ -110,7 +110,7 @@ export const Space = () => {
         {campaign?.map((campaigns, index) => {
           const nftId = buildNftId(campaigns.spaceId, campaigns.nonce);
           return (
-            <Box className="flex flex-col border-2 border-teal-300 w-fit px-4 ml-10 mt-2 rounded-lg" key={index}>
+            <Box className="flex flex-col border-2 border-teal-300 w-fit px-4 ml-10 my-2 rounded-lg" key={index}>
               <Box boxSize="2xs" className="my-1.5">
                 <Image src={`https://devnet-api.multiversx.com/nfts/${nftId}/thumbnail`} alt="nft" />
               </Box>
