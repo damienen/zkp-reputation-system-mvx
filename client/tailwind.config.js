@@ -5,7 +5,15 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        dmSans: ["DM Sans", "sans-serif"],
+        dmSans: ["Space Mono", "sans-serif"],
+      },
+    },
+    colors: {
+      "itheum": {
+        "black": "#110528",
+        "dark": "#333333",
+        "blue": "#51cbd7",
+        "orchid": "#dd67dc",
       },
     },
   },
