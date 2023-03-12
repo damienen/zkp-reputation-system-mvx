@@ -23,4 +23,19 @@ export class MultiversXApi {
       return { data: [] };
     }
   }
+
+  async getLastCollectionCreated(stringAddress: string) {
+    const address = new Address(stringAddress);
+    try {
+      let collections = await axios.get(
+        `${apiUrl}/accounts/${address}/roles/collections`
+      );
+      collections = collections.data.filter((collection: any) => {
+        return collection.owner === address.bech32();
+      });
+      return { data: collections };
+    } catch (error) {
+      return { data: [] };
+    }
+  }
 }

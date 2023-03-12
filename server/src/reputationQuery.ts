@@ -92,7 +92,7 @@ export class Contract {
         data: {
           campaigns: returnValue.map((claim: any) => {
             return {
-              campaign: this.mapCampaign(claim["campaign"]),
+              ...this.mapCampaign(claim["campaign"]),
               amount: claim["amount"].toNumber(),
             };
           }),
