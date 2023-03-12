@@ -1,10 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap");
 
 .font-open-sans {
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
 }
 
-index, body, html {
+index,
+body,
+html {
   width: 100%;
   height: 100dvh;
 }
@@ -14,3 +16,8 @@ index, body, html {
   display: none;
 }
 
+.dapp-core-component__main__btn.dapp-core-component__main__btn-primary.dapp-core-component__main__px-4.dapp-core-component__main__m-1.dapp-core-component__main__mx-3 {
+  background-color: #51cbd7 !important;
+  border-color: #51cbd7 !important;
+  color: #110528 !important;
+}
