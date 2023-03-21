@@ -33,15 +33,19 @@ The SC is deployed using the interaction snippets created in the contract/snippe
 
 You can run the backend by going into the server folder and using the command:
 
-    ```genezio local```
+    ```
+    genezio local
+    ```
 
 You can run the frontend by going into the client folder and using the command:
 
-    ```npm start```
+    ```
+    npm start
+    ```
 
 Note: Make sure to set your Wallet Connect V2 and Passbase keys in the .env file.
 
-```
-REACT_APP_WALLETCONNECTV2_KEY =
-REACT_APP_PASSBASE_KEY =
-```
+    ```
+    REACT_APP_WALLETCONNECTV2_KEY =
+    REACT_APP_PASSBASE_KEY =
+    ```
